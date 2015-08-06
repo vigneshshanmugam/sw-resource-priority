@@ -1,0 +1,4 @@
+node_modules
+lib/
+sw.bundle.js
+npm-debug.log

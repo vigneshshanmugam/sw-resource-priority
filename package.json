@@ -1,0 +1,34 @@
+{
+  "name": "sw-resource-priority",
+  "version": "1.0.0",
+  "description": "Scheduling the Priority of Resources using SW.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -t babelify src/main.js -o lib/bundle.js",
+    "watch": "./watchify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vigneshshanmugam/sw-resource-priority.git"
+  },
+  "keywords": [
+    "Resource",
+    "Scheduler"
+  ],
+  "author": "Vignesh Shanmugam <vignesh.shanmugam22@gmail.com> (https://vigneshh.in)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vigneshshanmugam/sw-resource-priority/issues"
+  },
+  "homepage": "https://github.com/vigneshshanmugam/sw-resource-priority",
+  "devDependencies": {
+    "babelify": "^6.1.3",
+    "browserify": "^11.0.1",
+    "express": "^4.13.3",
+    "fs": "0.0.2",
+    "serviceworker-cache-polyfill": "^3.0.0",
+    "spdy": "^1.32.4",
+    "watchify": "^3.3.1"
+  }
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+watchify -t babelify sw.js -o sw.bundle.js &
+watchify -t babelify src/main.js -o lib/app.bundle.js
