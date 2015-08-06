@@ -36,24 +36,57 @@ self.onfetch = function (event) {
       	request = event.request.clone(),
       	type = requestURL.href.split('.').pop();
 
-	//Adding to Scheduler
-	Scheduler.add(type, request);
 
+    //Need to fix it
+    let finalType = type.substr(0, type.indexOf('?'));
 	
-
+	//Adding to Scheduler
+	Scheduler.add(finalType, request);
 
 	event.respondWith(
-		caches.match(request).then(function (response) {
+		caches.match(request).then((response) => {
 			if (response) {
 			  return response;
 			}
-			console.log('Trying Fetch - Cache Not Available ' + request.url);
-			return fetch(request).then(function (response) {
-			  	caches.open(caheName).then(function (cache) {
-			    	cache.put(request, response);
-			  	});
-			  	return response.clone();
-			});
+			goThroughScheduler(request);
 		})
 	);
 };
+
+function goThroughScheduler(request) {
+
+	console.log('Not there in Cache, Trying to Fetch - ' + request.url);
+	let resources = Scheduler.resources;
+	let sortedRes = sortResource(resources, 'js');
+
+	if(sortedRes !== null){
+		resources.map(req => {
+			return fetch(req).then(function (response) {
+			  	caches.open(caheName).then(function (cache) {
+			    	cache.put(req, response);
+			  	});
+			  	return response.clone();
+			});
+		});
+	}else{ //HTML & CSS Files
+		return fetch(request).then(function (response) {
+		  	caches.open(caheName).then(function (cache) {
+		    	cache.put(request, response);
+		  	});
+		  	return response.clone();
+		});
+	}
+}
+
+//Assumption - Resource Array ==> Array of Objects
+function sortResource(res, type) {
+	debugger;
+	let resArr = res[type];
+
+	if(resArr !== undefined){
+		resArr.sort((a,b) => {
+			return parseInt(a.priority) - parseInt(b.priority)
+		});
+	}
+	return null;
+}
