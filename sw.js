@@ -80,7 +80,6 @@ function goThroughScheduler(request) {
 
 //Assumption - Resource Array ==> Array of Objects
 function sortResource(res, type) {
-	debugger;
 	let resArr = res[type];
 
 	if(resArr !== undefined){
