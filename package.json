@@ -29,7 +29,6 @@
     "eslint": "^1.10.3",
     "express": "^4.13.3",
     "serviceworker-cache-polyfill": "^3.0.0",
-    "spdy": "^1.32.4",
     "watchify": "^3.3.1"
   }
 }

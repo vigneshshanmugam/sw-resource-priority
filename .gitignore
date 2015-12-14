@@ -1,4 +1,5 @@
 node_modules
 lib/
 sw.bundle.js
+cert/
 npm-debug.log

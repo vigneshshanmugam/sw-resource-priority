@@ -3,43 +3,69 @@ class Scheduler {
     constructor() {
         this.resources = new Map();
         this.defaultPrioriy = {
-            'fonts': 1,
-            'css': 2,
+            'css': 1,
+            'fonts': 2,
             'js': 3,
             'images': 4
         };
         // Count - Limit when we need to fireaway all requests
         this.resCount = 0;
+        // Just to maintain the priority
+        this.createLocalState();
+    }
+
+    createLocalState() {
+        Object.keys(this.defaultPrioriy).map( (k) => {
+            this.resources.set(k, []);
+        });
     }
 
     getResourceType(url) {
         const requestURL = new URL(url);
         const arr = requestURL.pathname.split('.');
-        return arr[arr.length - 1];
+        let type = arr[arr.length - 1];
+        if (type == 'jpg' || type == 'png') {
+            type = 'images';
+        } else if (type == 'woff' || type == 'woff2') {
+            type = 'fonts';
+        }
+        return type;
+    }
+
+    sortResource(resArr) {
+        if (resArr.length > 0) {
+            resArr.sort((a,b) => {
+                return parseInt(a.priority) - parseInt(b.priority);
+            });
+        }
+        return resArr;
     }
 
     fireAllRequests(timeout, callback) {
-        return setTimeout (() => {
-            this.resources.map((type) => {
-                const resArr = this.resources[type];
+        setTimeout (() => {
+            console.log(this.resources);
+            for (let value of this.resources.values()) {
+                const resArr = this.sortResource(value);
                 callback(resArr);
-            });
+            }
         }, timeout);
     }
 
-    add(request) {
+    add(request, callback) {
+        const type = this.getResourceType(request.url);
+        if (type == '/') {
+            return;
+        }
+
         this.resCount++;
         if (this.resCount > 6) {
             this.resCount = 0;
-            this.fireAllRequests();
+            this.fireAllRequests(1000, callback);
         }
 
-        const type = this.getResourceType(request.url);
         let resArr = [];
         if (this.resources.has(type)) {
             resArr = this.resources.get(type);
-        } else {
-            this.resources.set(type, resArr);
         }
         
         const priority = this._getResPriority(request.url, type);
@@ -62,7 +88,7 @@ class Scheduler {
         if (value && value.length > 0) {
             priority = value[1];
         } else {
-            priority = this.priority[type];
+            priority = this.defaultPrioriy[type];
         }
         return priority;
     }
