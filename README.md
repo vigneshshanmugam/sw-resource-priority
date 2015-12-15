@@ -11,6 +11,12 @@ js : 3
 images: 4
 ```
 
+You can force the priority manually through query params like this
+
+```
+    http://www.example.com/a.js?priority=1
+```
+
 ### Issue
 
 + Works only after SW install is done - Finding a way to work around
