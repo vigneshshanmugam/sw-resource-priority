@@ -1,4 +1,4 @@
-import Scheduler from './src/Scheduler';
+import scheduler from './src/Scheduler';
 import 'serviceworker-cache-polyfill';
 
 var caheName = 'sw-priority';
@@ -33,14 +33,14 @@ self.onactivate = function (event) {
 self.onfetch = function (event) {
     const request = event.request.clone();
     // Adding to Scheduler
-    Scheduler.add(request, fetchAndCacheRequest);
+    scheduler.add(request, fetchAndCacheRequest);
 
     // event.respondWidth();
 };
 
 function fetchAndCacheRequest (requestArr) {
     requestArr.map((req) => {
-        Scheduler.remove(req);
+        scheduler.remove(req);
         return fetch(req).then(function (response) {
             caches.open(caheName).then(function (cache) {
                 cache.put(req, response);
